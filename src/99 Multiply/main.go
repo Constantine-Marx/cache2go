@@ -8,12 +8,14 @@ import (
 )
 
 func main() {
-	calMuti(10)
+	for i := 0; i < 100; i++ {
+		calMuti(10, i+1)
+	}
 	// fmt.Printf("%20d",123);
 }
 
-func calMuti(levelNum int) {
-	rand.Seed(time.Now().Unix())
+func calMuti(levelNum, cnt int) {
+	rand.Seed(time.Now().UnixNano())
 	y := rand.Intn(levelNum)
 	randOpr := true
 	for i := 0; i < 9; i++ {
@@ -23,10 +25,19 @@ func calMuti(levelNum int) {
 		}
 		printMuti("src/99 Multiply/pro.txt", "src/99 Multiply/ans.txt", i+1, i+1, (i+1)*(i+1), y, true, randOpr)
 	}
+	proPath, _ := os.OpenFile("src/99 Multiply/pro.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	ansPath, _ := os.OpenFile("src/99 Multiply/ans.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	if cnt%2 == 1 {
+		for i := 0; i < 7; i++ {
+			fmt.Fprintf(proPath, "\n")
+			fmt.Fprintf(ansPath, "\n")
+		}
+	}
+
 }
 
 func printMuti(proName, ansName string, x, y, z, randNum int, endl, randOpr bool) { //randopr -- rand or no rand
-	
+
 	proPath, proErr := os.OpenFile(proName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	ansPath, ansErr := os.OpenFile(ansName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 
@@ -34,7 +45,7 @@ func printMuti(proName, ansName string, x, y, z, randNum int, endl, randOpr bool
 		fmt.Println("Pro file Open Fail!")
 		return
 	}
-	
+
 	if ansErr != nil {
 		fmt.Println("Ans file Open Fail!")
 		return
@@ -43,9 +54,9 @@ func printMuti(proName, ansName string, x, y, z, randNum int, endl, randOpr bool
 	if randOpr { //随机挖空模式
 		if randNum < 5 {
 			if endl {
-				fmt.Fprintf(proPath, "%d × %d = %-2s\n", x, y,"__")
+				fmt.Fprintf(proPath, "%d × %d = %-2s\n", x, y, "__")
 			} else {
-				fmt.Fprintf(proPath, "%d × %d = %-2s ", x, y,"__")
+				fmt.Fprintf(proPath, "%d × %d = %-2s ", x, y, "__")
 			}
 		} else {
 			if endl {
@@ -56,9 +67,9 @@ func printMuti(proName, ansName string, x, y, z, randNum int, endl, randOpr bool
 		}
 	} else { //非随机模式
 		if endl {
-			fmt.Fprintf(proPath, "%d × %d = %-2s\n", x, y,"__")
+			fmt.Fprintf(proPath, "%d × %d = %-2s\n", x, y, "__")
 		} else {
-			fmt.Fprintf(proPath, "%d × %d = %-2s ", x, y,"__")
+			fmt.Fprintf(proPath, "%d × %d = %-2s ", x, y, "__")
 		}
 	}
 
